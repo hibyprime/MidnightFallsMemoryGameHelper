@@ -1,0 +1,7 @@
+## Interface: 120001
+## Title: MidnightFallsMemoryGameHelper
+## Notes: MidnightFallsMemoryGameHelper
+## Author: JoeMama
+## Version: 1.0
+
+MidnightFallsMemoryGameHelper.lua
