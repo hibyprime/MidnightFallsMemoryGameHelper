@@ -1,13 +1,8 @@
--- MidnightFallsMemoryGameHelper Addon
-
 local addonName = "MidnightFallsMemoryGameHelper"
 local FRAME_WIDTH  = 366
 local FRAME_HEIGHT = 180
 local ENABLED = true
 
--- ============================================================
--- Build the display frame
--- ============================================================
 local frame = CreateFrame("Frame", "MidnightFallsMemoryGameHelperFrame", UIParent, "BackdropTemplate")
 frame:SetSize(FRAME_WIDTH, FRAME_HEIGHT)
 frame:SetPoint("CENTER", UIParent, "CENTER", 400, 200)
@@ -18,7 +13,6 @@ frame:SetScript("OnDragStart", frame.StartMoving)
 frame:SetScript("OnDragStop",  frame.StopMovingOrSizing)
 frame:SetClampedToScreen(true)
 
--- Output text
 local output = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
 output:SetPoint("TOPLEFT",  frame, "TOPLEFT",  10, -28)
 output:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
@@ -51,7 +45,6 @@ local listener = CreateFrame("Frame")
 listener:RegisterEvent("CHAT_MSG_SAY")
 
 listener:SetScript("OnEvent", function(self, event, msg)
-    -- Existing logic (safe against secret strings via pcall)
     pcall(ParseMessage, msg)
 end)
 
