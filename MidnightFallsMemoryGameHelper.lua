@@ -1,6 +1,6 @@
 local addonName = "MidnightFallsMemoryGameHelper"
-local FRAME_WIDTH  = 366
-local FRAME_HEIGHT = 180
+local FRAME_WIDTH  = 200
+local FRAME_HEIGHT = 210
 local ENABLED = true
 
 local frame = CreateFrame("Frame", "MidnightFallsMemoryGameHelperFrame", UIParent, "BackdropTemplate")
@@ -13,19 +13,74 @@ frame:SetScript("OnDragStart", frame.StartMoving)
 frame:SetScript("OnDragStop",  frame.StopMovingOrSizing)
 frame:SetClampedToScreen(true)
 
-local output = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-output:SetPoint("TOPLEFT",  frame, "TOPLEFT",  10, -28)
-output:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 10)
-output:SetJustifyH("LEFT")
-output:SetJustifyV("TOP")
-output:SetWordWrap(true)
-output:SetText(" ")
+local icons = {}
+local MAX_ICONS = 5
+
+local pentagramPoints = {
+    {  35,  50 },
+    {  57, -18 },
+    {   0, -60 },
+    { -57, -18 },
+    { -35,  50 },
+}
+
+local tankIcon = nil
+local TANK_ICON_PATH = "Interface\\LFGFrame\\UI-LFG-ICON-ROLES"
+
+local function ClearIcons()
+    for _, tex in ipairs(icons) do
+        tex:Hide()
+    end
+    wipe(icons)
+
+    if tankIcon then
+        tankIcon:Hide()
+    end
+end
+
+local function EnsureTankIcon()
+    if tankIcon then return tankIcon end
+
+    local tex = frame:CreateTexture(nil, "OVERLAY")
+    tex:SetSize(32, 32)
+    tex:SetTexture(TANK_ICON_PATH)
+    tex:SetAtlas("groupfinder-icon-role-large-tank")
+
+    tankIcon = tex
+    return tex
+end
+
+local function PositionTankIcon()
+    local p1 = pentagramPoints[1]
+    local p2 = pentagramPoints[5]
+
+    local midX = (p1[1] + p2[1]) / 2
+    local midY = (p1[2] + p2[2]) / 2 - 25
+
+    local tex = EnsureTankIcon()
+    tex:SetPoint("CENTER", frame, "CENTER", midX, midY)
+    tex:Show()
+end
 
 local function ParseMessage(msg)
-    output:SetText(output:GetText() .. "|T" .. msg .. ":64|t  ")
+    if #icons >= MAX_ICONS then return end
 
-    C_Timer.NewTimer (22, function ()
-        output:SetText(" ")
+    local index = #icons + 1
+    local point = pentagramPoints[index]
+
+    local tex = frame:CreateTexture(nil, "ARTWORK")
+    tex:SetSize(48, 48)
+    tex:SetPoint("CENTER", frame, "CENTER", point[1], point[2])
+    tex:SetTexture(msg)
+
+    table.insert(icons, tex)
+
+    if #icons >= 1 then
+        PositionTankIcon()
+    end
+
+    C_Timer.After(22, function()
+        ClearIcons()
     end)
 end
 
