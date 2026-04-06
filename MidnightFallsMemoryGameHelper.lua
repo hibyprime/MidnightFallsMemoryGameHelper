@@ -43,6 +43,8 @@ end
 
 local listener = CreateFrame("Frame")
 listener:RegisterEvent("CHAT_MSG_SAY")
+listener:RegisterEvent("CHAT_MSG_RAID")
+listener:RegisterEvent("CHAT_MSG_RAID_LEADER")
 
 listener:SetScript("OnEvent", function(self, event, msg)
     pcall(ParseMessage, msg)
